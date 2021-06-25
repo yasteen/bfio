@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     printf("Starting brainfuck interpreter.\n");
-    bfi_interpret(bfi_read_file(argv[1]));
+    int status = bfi_interpret(bfi_read_file(argv[1]), 0);
     printf("\n");
-    return 0;
+    return status;
 }
