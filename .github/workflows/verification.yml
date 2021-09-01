@@ -1,0 +1,30 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: make
+      run: |
+        cd interpreter
+        make
+    # - name: make check
+    #   run: make check
+    # - name: make distcheck
+    #   run: make distcheck
+    - name: test
+      run: |
+        cd interpreter/test
+        ../bfi beer.bf
+        ../bfi fibonacci.bf
+        ../bfi hello_world.bf
+        ../bfi simple.bf
