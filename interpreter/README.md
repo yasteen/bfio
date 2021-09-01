@@ -43,8 +43,10 @@ a byte for read/write info.
 the byte at the data pointer.
 
 For example, the data cells would look like this:
+```
   v
 | 9 | 48 | 65 | 6C | 6C | 6F | 2E | 74 | 78 | 74 |
   ^
+```
 would open a file called Hello.txt - the data pointer
 points at the length of the string.
