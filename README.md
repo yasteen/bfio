@@ -1,1 +1,1 @@
-# Brainfuck In-N-Out
+# Brainfuck In-n-Out
