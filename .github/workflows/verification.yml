@@ -23,7 +23,7 @@ jobs:
     #   run: make distcheck
     - name: test
       run: |
-        cd test
+        cd interpreter/test
         ../bfi beer.bf
         ../bfi fibonacci.bf
         ../bfi hello_world.bf
