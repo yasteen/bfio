@@ -1,4 +1,25 @@
 #include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+
+int open_close_file(FILE ** file, char * data_ptr) {
+    if (*file) {
+        int status = fclose(*file);
+        *file = NULL;
+        return status;
+    }
+    int num_chars = (int) *data_ptr;
+    char file_name[num_chars];
+    strncpy(&file_name[0], &data_ptr[1], num_chars);
+    *file = fopen(&file_name[0], "w+");
+    if (!*file) {
+        fprintf(stderr, "Error opening file %s. %s\n", &file_name[0], strerror(errno));
+        printf("DATA:\n%c\n", (int) data_ptr[0]);
+        exit(1);
+    }
+    return 0;
+}
 
 #define DATA_MAX 32768
 int bfi_interpret(char * src, int debug)
@@ -9,6 +30,7 @@ int bfi_interpret(char * src, int debug)
 
     // negative: close bracket, positive: open bracket, zero: regular operation
     int skip_state = 0;
+    FILE * current_file;
 
     while (*current != '\0') {
         if (*current == '[' && (skip_state != 0 || *data_ptr == 0)) skip_state++;
@@ -31,6 +53,10 @@ int bfi_interpret(char * src, int debug)
                 case '-': *data_ptr = *data_ptr - 1; break;
                 case '.': putchar(*data_ptr); break;
                 case ',': *data_ptr = getchar(); break;
+                case '"': open_close_file(&current_file, data_ptr); break;
+                case '\'': fseek(current_file, 1, SEEK_CUR); break;
+                case ':': fwrite(data_ptr, sizeof(char), 1, current_file); break;
+                case ';': fread(data_ptr, sizeof(char), 1, current_file); break;
             }
         }
         if (skip_state < 0) current--;
