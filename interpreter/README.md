@@ -39,7 +39,7 @@ a byte for read/write info.
 - `"` Triggers an open/close - only one file open at a time.
 - `'` Skips a byte
 - `:` Writes a byte to the file.
-- ";" Reads a byte from the file, storing its value in
+- `;` Reads a byte from the file, storing its value in
 the byte at the data pointer.
 
 For example, the data cells would look like this:
