@@ -3,70 +3,104 @@
 #include <string.h>
 #include <stdlib.h>
 
-int open_close_file(FILE ** file, char * data_ptr) {
-    if (*file) {
+int open_close_file(FILE **file, char *data_ptr)
+{
+    if (*file)
+    {
         int status = fclose(*file);
         *file = NULL;
         return status;
     }
-    int num_chars = (int) *data_ptr;
+    int num_chars = (int)*data_ptr;
     char file_name[num_chars];
     strncpy(&file_name[0], &data_ptr[1], num_chars);
     *file = fopen(&file_name[0], "w+");
-    if (!*file) {
+    if (!*file)
+    {
         fprintf(stderr, "Error opening file %s. %s\n", &file_name[0], strerror(errno));
-        printf("DATA:\n%c\n", (int) data_ptr[0]);
+        printf("DATA:\n%c\n", (int)data_ptr[0]);
         exit(1);
     }
     return 0;
 }
 
 #define DATA_MAX 32768
-int bfi_interpret(char * src, int debug)
+int bfi_interpret(char *src, int debug)
 {
     char DATA_ARRAY[DATA_MAX] = {0};
-    char * data_ptr = &DATA_ARRAY[0];
-    char * current = src;
+    char *data_ptr = &DATA_ARRAY[0];
+    char *current = src;
 
     // negative: close bracket, positive: open bracket, zero: regular operation
     int skip_state = 0;
-    FILE * current_file;
+    FILE *current_file;
 
-    while (*current != '\0') {
-        if (*current == '[' && (skip_state != 0 || *data_ptr == 0)) skip_state++;
-        if (*current == ']' && (skip_state != 0 || *data_ptr != 0)) skip_state--;
-        if (skip_state == 0) {
-            if (*current == '+' || *current == '-') {
+    while (*current != '\0')
+    {
+        if (*current == '[' && (skip_state != 0 || *data_ptr == 0))
+            skip_state++;
+        if (*current == ']' && (skip_state != 0 || *data_ptr != 0))
+            skip_state--;
+        if (skip_state == 0)
+        {
+            if (*current == '+' || *current == '-')
+            {
                 if (data_ptr < &DATA_ARRAY[0] ||
-                        data_ptr > &DATA_ARRAY[DATA_MAX - 1]) {
+                    data_ptr > &DATA_ARRAY[DATA_MAX - 1])
+                {
                     printf("Data pointer out of bounds.");
-                    printf("\tMin address: %p\n", (void *) &DATA_ARRAY[0]);
-                    printf("\tMax address: %p\n", (void *) &DATA_ARRAY[DATA_MAX - 1]);
-                    printf("\tPointer: %p\n", (void *) data_ptr);
+                    printf("\tMin address: %p\n", (void *)&DATA_ARRAY[0]);
+                    printf("\tMax address: %p\n", (void *)&DATA_ARRAY[DATA_MAX - 1]);
+                    printf("\tPointer: %p\n", (void *)data_ptr);
                     return 1;
                 }
             }
-            switch (*current) {
-                case '>': data_ptr++; break;
-                case '<': data_ptr--; break;
-                case '+': *data_ptr = *data_ptr + 1; break;
-                case '-': *data_ptr = *data_ptr - 1; break;
-                case '.': putchar(*data_ptr); break;
-                case ',': *data_ptr = getchar(); break;
-                case '"': open_close_file(&current_file, data_ptr); break;
-                case '\'': fseek(current_file, 1, SEEK_CUR); break;
-                case ':': fwrite(data_ptr, sizeof(char), 1, current_file); break;
-                case ';': fread(data_ptr, sizeof(char), 1, current_file); break;
+            switch (*current)
+            {
+            case '>':
+                data_ptr++;
+                break;
+            case '<':
+                data_ptr--;
+                break;
+            case '+':
+                *data_ptr = *data_ptr + 1;
+                break;
+            case '-':
+                *data_ptr = *data_ptr - 1;
+                break;
+            case '.':
+                putchar(*data_ptr);
+                break;
+            case ',':
+                *data_ptr = getchar();
+                break;
+            case '"':
+                open_close_file(&current_file, data_ptr);
+                break;
+            case '\'':
+                fseek(current_file, 1, SEEK_CUR);
+                break;
+            case ':':
+                fwrite(data_ptr, sizeof(char), 1, current_file);
+                break;
+            case ';':
+                fread(data_ptr, sizeof(char), 1, current_file);
+                break;
             }
         }
-        if (skip_state < 0) current--;
-        else current++;
+        if (skip_state < 0)
+            current--;
+        else
+            current++;
     }
-    if (skip_state != 0) {
+    if (skip_state != 0)
+    {
         printf("Unmatched brackets");
         return 1;
     }
-    if (debug) {
+    if (debug)
+    {
         printf("ALL CHARS: %s\n", DATA_ARRAY);
     }
     return 0;
