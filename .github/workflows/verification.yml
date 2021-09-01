@@ -15,16 +15,16 @@ jobs:
     - uses: actions/checkout@v2
     - name: make
       run: |
-      cd interpreter
-      make
+        cd interpreter
+        make
     # - name: make check
     #   run: make check
     # - name: make distcheck
     #   run: make distcheck
     - name: test
       run: |
-      cd test
-      ../bfi beer.bf
-      ../bfi fibonacci.bf
-      ../bfi hello_world.bf
-      ../bfi simple.bf
+        cd test
+        ../bfi beer.bf
+        ../bfi fibonacci.bf
+        ../bfi hello_world.bf
+        ../bfi simple.bf
