@@ -24,7 +24,7 @@ jobs:
     - name: test brainfuck interpreter
       run: |
         cd interpreter
-        ./bfi ../beer.bf
-        ./bfi ../fibonacci.bf
-        ./bfi ../hello_world.bf
-        ./bfi ../simple.bf
+        ./bfi ../test/beer.bf
+        ./bfi ../test/fibonacci.bf
+        ./bfi ../test/hello_world.bf
+        ./bfi ../test/simple.bf
