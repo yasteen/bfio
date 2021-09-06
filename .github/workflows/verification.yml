@@ -21,10 +21,10 @@ jobs:
     #   run: make check
     # - name: make distcheck
     #   run: make distcheck
-    - name: test
+    - name: test brainfuck interpreter
       run: |
-        cd interpreter/test
-        ../bfi beer.bf
-        ../bfi fibonacci.bf
-        ../bfi hello_world.bf
-        ../bfi simple.bf
+        cd interpreter
+        ./bfi ../beer.bf
+        ./bfi ../fibonacci.bf
+        ./bfi ../hello_world.bf
+        ./bfi ../simple.bf
