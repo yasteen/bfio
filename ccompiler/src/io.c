@@ -3,32 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-int add_string(FILE *file, char *new, int level)
+int add_string(FILE *file, char *str, int level)
 {
     char tabs[level + 1];
     memset(tabs, '\t', level);
-    fprintf(file, "%s%s\n", tabs, new);
-}
-
-int bfcc_write_file(const char *filename, char *src)
-{
-    FILE *fp;
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-
-    fp = fopen(filename, "w+");
-    if (fp == NULL)
-    {
-        printf("Could not write to file %s \n", filename);
-        exit(1);
-    }
-    if (fputs(src, fp) < 0)
-    {
-        printf("Error occured while writing to file %s \n", filename);
-        exit(1);
-    }
-    return fclose(fp);
+    tabs[level] = '\0';
+    fprintf(file, "%s%s\n", tabs, str);
+    return 0;
 }
 
 char *bfcc_read_file(const char *filename)

@@ -1,61 +1,93 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "include/bfcc.h"
+#include "include/io.h"
+
+int is_op(char c)
+{
+    return c == '+' ||
+           c == '-' ||
+           c == '<' ||
+           c == '>' ||
+           c == '.' ||
+           c == ',' ||
+           c == '[' ||
+           c == ']';
+}
+
+int simple_op(FILE *file, char **current, int tab)
+{
+    char delta = 0;
+    while (**current == '+' || **current == '-' || !is_op(**current))
+    {
+        if (**current == '+')
+            delta++;
+        else if (**current == '-')
+            delta--;
+        *current = *current + 1;
+    }
+    if (delta)
+    {
+        char str[13];
+        sprintf(str, "*ptr += %d;", delta);
+        add_string(file, str, tab);
+    }
+    int offset = 0;
+    while (**current == '>' || **current == '<' || !is_op(**current))
+    {
+        if (**current == '>')
+            offset++;
+        else if (**current == '<')
+            offset--;
+        *current = *current + 1;
+    }
+    if (offset)
+    {
+        char str[20];
+        sprintf(str, "ptr += %d;", offset);
+        add_string(file, str, tab);
+    }
+    return 0;
+}
 
 int bfcc_compile(char *src, char *filename)
 {
     FILE *file = fopen(filename, "w+");
     int tab = 0;
     add_string(file, "#include <stdio.h>\n\nint main()\n{", tab);
-    // Max integer is 10 digits (hence we only need 29 characters)
-    char *data_array[30];
+    char data_array[70];
     sprintf(data_array, "char data[%d] = {0};\n\tchar *ptr = &data[0];\n\tFILE *f;", DATA_MAX);
     add_string(file, data_array, ++tab);
 
-    char *current = *src;
-    while(*current != '\0')
+    char *current = src;
+
+    while (*current != '\0')
     {
-        switch(*current)
+        if (*current == '+' || *current == '-' || *current == '<' || *current == '>')
         {
-            case '+':
-            case '-':
-            case '<':
-            case '>':
-                simple_op(file, src, tab);
+            simple_op(file, &current, tab);
+            continue;
         }
+        switch (*current)
+        {
+        case '[':
+            add_string(file, "while (*ptr)", tab);
+            add_string(file, "{", tab++);
+            break;
+        case ']':
+            add_string(file, "}", --tab);
+            break;
+        case '.':
+            add_string(file, "printf(\"%c\", *ptr);", tab);
+            break;
+        case ',':
+            add_string(file, "*ptr = getchar();", tab);
+            break;
+        }
+        current++;
     }
 
     add_string(file, "return 0;\n}", tab--);
     return fclose(file);
-}
-
-int simple_op(FILE *file, char *src, int tab)
-{
-    char delta = 0;
-    while (*src == '+' || *src == '-')
-    {
-        if (*src == '+')
-            delta++;
-        else
-            delta--;
-    }
-    if (delta)
-    {
-        char str[11] = sprintf("*ptr += %c;", delta);
-        add_string(file, str, tab);
-    }
-    int offset = 0;
-    while (*src == '>' || *src == '<')
-    {
-        if (*src == '>')
-            offset++;
-        else
-            offset--;
-    }
-    if (offset)
-    {
-        char str[20] = sprintf("ptr += %d;", offset);
-        add_string(file, str, tab);
-    }
-    return 0;
 }
