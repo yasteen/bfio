@@ -26,6 +26,7 @@ clean:
 	-rm *.o
 	-rm *.a
 	-rm src/*.o
+	-rm bfcc
 
 lint:
 	clang-tidy src/*.c src/include/*.h

@@ -31,11 +31,11 @@ jobs:
     - name: test brainfuck c compiler
       run: |
         cd ccompiler
-        ./bfi ../test/beer.bf
+        ./bfcc ../test/beer.bf
         ./a.out
-        ./bfi ../test/fibonacci.bf
+        ./bfcc ../test/fibonacci.bf
         ./a.out
-        ./bfi ../test/hello_world.bf
+        ./bfcc ../test/hello_world.bf
         ./a.out
-        ./bfi ../test/simple.bf
+        ./bfcc ../test/simple.bf
         ./a.out
