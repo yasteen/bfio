@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "./include/bfi.h"
+
 int open_close_file(FILE **file, char *data_ptr)
 {
     if (*file)
@@ -24,7 +26,6 @@ int open_close_file(FILE **file, char *data_ptr)
     return 0;
 }
 
-#define DATA_MAX 32768
 int bfi_interpret(char *src, int debug)
 {
     char DATA_ARRAY[DATA_MAX] = {0};
