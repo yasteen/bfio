@@ -1,4 +1,4 @@
-exec = bfi
+exec = bfcc
 sources = $(wildcard src/*.c)
 objects = $(sources:.c=.o)
 flags = -g -Wall -lm -ldl -fpic -rdynamic
@@ -7,7 +7,7 @@ flags = -g -Wall -lm -ldl -fpic -rdynamic
 $(exec): $(objects)
 	gcc $(objects) $(flags) -o $(exec)
 
-libbfi.a: $(objects)
+libbfcc.a: $(objects)
 	ar rcs $@ $^
 
 %.o: %.c include/%.h
@@ -15,18 +15,18 @@ libbfi.a: $(objects)
 
 install:
 	make
-	make libbfi.a
-	mkdir -p /usr/local/include/bfi
-	cp -r ./src/include/* /usr/local/include/bfi/.
-	cp ./libbfi.a /usr/local/lib/.
-	cp ./bfi.out /usr/local/bin/bfi
+	make libbfcc.a
+	mkdir -p /usr/local/include/bfcc
+	cp -r ./src/include/* /usr/local/include/bfcc/.
+	cp ./libbfcc.a /usr/local/lib/.
+	cp ./bfcc.out /usr/local/bin/bfcc
 
 clean:
 	-rm *.out
 	-rm *.o
 	-rm *.a
 	-rm src/*.o
-	-rm bfi
+	-rm bfcc
 
 lint:
 	clang-tidy src/*.c src/include/*.h

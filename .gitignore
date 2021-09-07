@@ -2,4 +2,8 @@
 *.swp
 *.o
 */bfi
+*/bfcc
+*/bfc
 .vscode
+*/a.out
+*/b.c

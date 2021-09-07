@@ -17,14 +17,27 @@ jobs:
       run: |
         cd interpreter
         make
+        cd ../ccompiler
+        make
     # - name: make check
     #   run: make check
     # - name: make distcheck
     #   run: make distcheck
-    - name: test
+    - name: test brainfuck interpreter
       run: |
-        cd interpreter/test
-        ../bfi beer.bf
-        ../bfi fibonacci.bf
-        ../bfi hello_world.bf
-        ../bfi simple.bf
+        cd interpreter
+        ./bfi ../test/beer.bf
+        ./bfi ../test/fibonacci.bf
+        ./bfi ../test/hello_world.bf
+        ./bfi ../test/simple.bf
+    - name: test brainfuck c compiler
+      run: |
+        cd ccompiler
+        ./bfcc ../test/beer.bf
+        ./a.out
+        ./bfcc ../test/fibonacci.bf
+        ./a.out
+        ./bfcc ../test/hello_world.bf
+        ./a.out
+        ./bfcc ../test/simple.bf
+        ./a.out
