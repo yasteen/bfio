@@ -1,4 +1,4 @@
-# Brainfuck interpreter
+# Brainfuck Interpreter
 
 This program is an extended brainfuck interpreter that
 also supports file reading/writing.
