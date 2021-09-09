@@ -8,3 +8,5 @@ Make and run the program using the following commands:
 $ make
 $ ./bfi [NAME_OF_FILE]
 ```
+
+(The interpreter runs much slower than the C compiler)
