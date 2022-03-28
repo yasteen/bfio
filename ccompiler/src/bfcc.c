@@ -13,7 +13,11 @@ int is_op(char c)
            c == '.' ||
            c == ',' ||
            c == '[' ||
-           c == ']';
+           c == ']' ||
+           c == '"' ||
+           c == '\''||
+           c == ':' ||
+           c == ';';
 }
 
 int simple_op(FILE *file, char **current, int tab)
@@ -55,10 +59,16 @@ int bfcc_compile(char *src, char *filename)
 {
     FILE *file = fopen(filename, "w+");
     int tab = 0;
-    add_string(file, "#include <stdio.h>\n\nint main()\n{", tab);
+    add_string(file, "#include <stdio.h>", tab);
+    add_string(file, "#include <stdlib.h>", tab);
+    add_string(file, "#include <string.h>", tab);
+    add_string(file, "int main()\n{", tab);
     char data_array[70];
-    sprintf(data_array, "char data[%d] = {0};\n\tchar *ptr = &data[0];\n\tFILE *f;", DATA_MAX);
+    sprintf(data_array, "char data[%d] = {0};\n\tchar *ptr = &data[0];", DATA_MAX);
     add_string(file, data_array, ++tab);
+    add_string(file, "FILE *f;", tab);
+    add_string(file, "int len;", tab);
+    add_string(file, "char *fileName;", tab);
 
     char *current = src;
 
@@ -83,6 +93,23 @@ int bfcc_compile(char *src, char *filename)
             break;
         case ',':
             add_string(file, "*ptr = getchar();", tab);
+            break;
+        case '"':
+            add_string(file, "len = *ptr;", tab);
+            add_string(file, "fileName = malloc(sizeof(char) * (len + 1));", tab);
+            add_string(file, "strncpy(fileName, ptr + 1, len);", tab);
+            add_string(file, "fileName[len] = '\\0';", tab);
+            add_string(file, "f=fopen(fileName, \"w+\");", tab);
+            add_string(file, "free(fileName);", tab);
+            break;
+        case '\'':
+            add_string(file, "fseek(f, 1, SEEK_CUR);", tab);
+            break;
+        case ':':
+            add_string(file, "fwrite(ptr, sizeof(char), 1, f);", tab);
+            break;
+        case ';':
+            add_string(file, "fread(ptr, sizeof(char), 1, f);", tab);
             break;
         }
         current++;
