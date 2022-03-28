@@ -22,11 +22,11 @@ install:
 	cp ./bfcc.out /usr/local/bin/bfcc
 
 clean:
-	-rm *.out
-	-rm *.o
-	-rm *.a
-	-rm src/*.o
-	-rm bfcc
+	-rm -rf a.out
+	-rm -rf *.o
+	-rm -rf *.a
+	-rm -rf src/*.o
+	-rm -rf bfcc
 
 lint:
 	clang-tidy src/*.c src/include/*.h

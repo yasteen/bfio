@@ -41,3 +41,5 @@ jobs:
         ./a.out
         ./bfcc ../test/simple.bf
         ./a.out
+        ./bfcc ../test/io.bf
+
