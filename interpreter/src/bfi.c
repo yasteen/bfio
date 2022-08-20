@@ -5,14 +5,8 @@
 
 #include "./include/bfi.h"
 
-int open_close_file(FILE **file, char *data_ptr)
+int open_file(FILE **file, char *data_ptr)
 {
-    if (*file)
-    {
-        int status = fclose(*file);
-        *file = NULL;
-        return status;
-    }
     int num_chars = (int)*data_ptr;
     char file_name[num_chars];
     strncpy(&file_name[0], &data_ptr[1], num_chars);
@@ -77,10 +71,10 @@ int bfi_interpret(char *src, int debug)
                 *data_ptr = getchar();
                 break;
             case '"':
-                open_close_file(&current_file, data_ptr);
+                open_file(&current_file, data_ptr);
                 break;
             case '\'':
-                fseek(current_file, 1, SEEK_CUR);
+                fclose(current_file);
                 break;
             case ':':
                 fwrite(data_ptr, sizeof(char), 1, current_file);

@@ -15,7 +15,7 @@ int is_op(char c)
            c == '[' ||
            c == ']' ||
            c == '"' ||
-           c == '\''||
+           c == '\'' ||
            c == ':' ||
            c == ';';
 }
@@ -103,7 +103,7 @@ int bfcc_compile(char *src, char *filename)
             add_string(file, "free(fileName);", tab);
             break;
         case '\'':
-            add_string(file, "fseek(f, 1, SEEK_CUR);", tab);
+            add_string(file, "fclose(f);", tab);
             break;
         case ':':
             add_string(file, "fwrite(ptr, sizeof(char), 1, f);", tab);
